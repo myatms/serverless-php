@@ -1,0 +1,62 @@
+service: laravel
+
+provider:
+    name: aws
+    # The AWS region in which to deploy (us-east-1 is the default)
+    region: us-east-1
+    # Environment variables
+    stage: ${opt:stage, 'dev'}
+    environment:
+        APP_ENV: production # Or use ${sls:stage} if you want the environment to match the stage
+
+package:
+    # Files and directories to exclude from deployment
+    patterns:
+        - '!node_modules/**'
+        - '!public/storage'
+        - '!resources/assets/**'
+        - '!storage/**'
+        - '!tests/**'
+
+functions:
+
+    # This function runs the Laravel website/API
+    web:
+        handler: public/index.php
+        runtime: php-81-fpm
+        timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+        events:
+            - httpApi: '*'
+
+    # This function lets us run artisan commands in Lambda
+    artisan:
+        handler: artisan
+        runtime: php-81-console
+        timeout: 720 # in seconds
+        # Uncomment to also run the scheduler every minute
+        #events:
+        #    - schedule:
+        #          rate: rate(1 minute)
+        #          input: '"schedule:run"'
+constructs:
+  website:
+    type: server-side-website
+    domain: sam.devopsmm.online
+    certificate: arn:aws:acm:us-east-1:652089208055:certificate/74e5b2c3-3f4e-42dd-99c4-e41c57cd07e2
+
+custom:
+  customDomain:
+    domainName: sam.devopsmm.online
+    certificateName: '*.devopsmm.online'
+    hostedZoneId: Z00146961ECI22POC63HC
+    createRoute53Record: true
+    endpointType: regional
+    securityPolicy: tls_1_2
+    apiType: http
+    certificateArn: arn:aws:acm:us-east-1:652089208055:certificate/74e5b2c3-3f4e-42dd-99c4-e41c57cd07e2
+plugins:
+  - ./vendor/bref/bref
+  - serverless-lift
+  - serverless-domain-manager
+  - serverless-s3-remover
+
