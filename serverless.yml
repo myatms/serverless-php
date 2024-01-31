@@ -41,22 +41,21 @@ functions:
 constructs:
   website:
     type: server-side-website
-    domain: sam.devopsmm.online
-    certificate: arn:aws:acm:us-east-1:652089208055:certificate/74e5b2c3-3f4e-42dd-99c4-e41c57cd07e2
+    domain: www.example.com
+    certificate: arn:aws:acm:us-east-1:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 custom:
   customDomain:
-    domainName: sam.devopsmm.online
-    certificateName: '*.devopsmm.online'
-    hostedZoneId: Z00146961ECI22POC63HC
+    domainName: www.example.com
+    certificateName: '*.example.com'
+    hostedZoneId: ABCDEFGHIJKMNLOP
     createRoute53Record: true
     endpointType: regional
     securityPolicy: tls_1_2
     apiType: http
-    certificateArn: arn:aws:acm:us-east-1:652089208055:certificate/74e5b2c3-3f4e-42dd-99c4-e41c57cd07e2
+    certificateArn: arn:aws:acm:us-east-1:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 plugins:
   - ./vendor/bref/bref
   - serverless-lift
   - serverless-domain-manager
-  - serverless-s3-remover
 
